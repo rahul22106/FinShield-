@@ -49,17 +49,53 @@ def run_phase2() -> None:
     logger.info("=" * 50)
     logger.info("FinShield - Phase 2: Complete")
 
+def run_phase3() -> None:
+    from model.features import load_cleaned_data, engineer_features, get_feature_matrix
+    from model.trainer import split_data, train_models, save_best_model
+    from model.evaluator import run_evaluation
+    import pickle
+    import os
+
+    logger.info("FinShield - Phase 3: ML Model Started")
+    logger.info("=" * 50)
+
+    # Step 1 - Load cleaned data
+    df = load_cleaned_data()
+
+    # Step 2 - Engineer features
+    df = engineer_features(df)
+
+    # Step 3 - Get feature matrix
+    X, y = get_feature_matrix(df)
+
+    feature_cols = list(X.columns)
+
+    # Step 4 - Split data
+    X_train, X_test, y_train, y_test = split_data(X, y)
+
+    # Step 5 - Train models
+    models = train_models(X_train, y_train)
+
+    # Step 6 - Save best model
+    best_name = save_best_model(models, X_test, y_test)
+
+    # Step 7 - Evaluate best model
+    best_model = models[best_name]
+    run_evaluation(best_model, X_test, y_test, best_name, feature_cols)
+
+    logger.info("=" * 50)
+    logger.info("FinShield - Phase 3: Complete")
+    logger.info("Model saved in: models/")
+    logger.info("Plots saved in: plots/")
 
 if __name__ == "__main__":
-    # Pass phase number as argument
-    # python main.py 1  -> runs phase 1
-    # python main.py 2  -> runs phase 2
-
     phase = sys.argv[1] if len(sys.argv) > 1 else "1"
 
     if phase == "1":
         run_phase1()
     elif phase == "2":
         run_phase2()
+    elif phase == "3":
+        run_phase3()
     else:
         logger.error(f"Unknown phase: {phase}")
