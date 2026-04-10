@@ -15,7 +15,7 @@ def run_phase1() -> None:
     logger.info("=" * 50)
 
     client       = get_plaid_client()
-    access_token = get_access_token(client)
+    access_token = None
     transactions = fetch_transactions(client, access_token)
     df           = transform_transactions(transactions)
 

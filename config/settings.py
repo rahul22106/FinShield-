@@ -14,7 +14,7 @@ BQ_DATASET             = 'fraud_data'
 BQ_TABLE               = 'raw_transactions'
 BQ_DESTINATION         = f'{BQ_DATASET}.{BQ_TABLE}'
 
-START_DATE             = '2024-01-01'
+START_DATE             = '2010-01-01'
 TRANSACTION_COUNT      = 500
 FRAUD_AMOUNT_THRESHOLD = 900
 
