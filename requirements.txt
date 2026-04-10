@@ -8,3 +8,7 @@ pytest
 matplotlib
 seaborn
 scipy
+scikit-learn
+xgboost
+joblib
+mlflow

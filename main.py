@@ -50,11 +50,13 @@ def run_phase2() -> None:
     logger.info("FinShield - Phase 2: Complete")
 
 def run_phase3() -> None:
-    from model.features import load_cleaned_data, engineer_features, get_feature_matrix
+    from model.features import (
+        load_cleaned_data,
+        engineer_features,
+        get_feature_matrix
+    )
     from model.trainer import split_data, train_models, save_best_model
     from model.evaluator import run_evaluation
-    import pickle
-    import os
 
     logger.info("FinShield - Phase 3: ML Model Started")
     logger.info("=" * 50)
@@ -66,14 +68,13 @@ def run_phase3() -> None:
     df = engineer_features(df)
 
     # Step 3 - Get feature matrix
-    X, y = get_feature_matrix(df)
-
+    X, y         = get_feature_matrix(df)
     feature_cols = list(X.columns)
 
     # Step 4 - Split data
     X_train, X_test, y_train, y_test = split_data(X, y)
 
-    # Step 5 - Train models
+    # Step 5 - Train all models with tuning
     models = train_models(X_train, y_train)
 
     # Step 6 - Save best model
@@ -81,7 +82,13 @@ def run_phase3() -> None:
 
     # Step 7 - Evaluate best model
     best_model = models[best_name]
-    run_evaluation(best_model, X_test, y_test, best_name, feature_cols)
+    run_evaluation(
+        best_model,
+        X_test, y_test,
+        best_name,
+        feature_cols,
+        all_models=models
+    )
 
     logger.info("=" * 50)
     logger.info("FinShield - Phase 3: Complete")
