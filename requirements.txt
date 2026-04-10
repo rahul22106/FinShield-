@@ -1,0 +1,7 @@
+plaid-python
+pandas
+pandas-gbq
+google-cloud-bigquery
+pyarrow
+python-dotenv
+pytest
