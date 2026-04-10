@@ -5,3 +5,6 @@ google-cloud-bigquery
 pyarrow
 python-dotenv
 pytest
+matplotlib
+seaborn
+scipy
