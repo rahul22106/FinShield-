@@ -1,0 +1,10 @@
+artifact_location: file:C:/Users/shipr/OneDrive/Documents/project/FinShield-/mlruns/132801490020199474/models/m-7a93cb03597f43f69e037a76b72dd957/artifacts
+creation_timestamp: 1775818827553
+experiment_id: '132801490020199474'
+last_updated_timestamp: 1775818836235
+model_id: m-7a93cb03597f43f69e037a76b72dd957
+model_type: null
+name: model
+source_run_id: 647e2db112b945b9bb62d33cd02e77ac
+status: 2
+status_message: null

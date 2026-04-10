@@ -1,0 +1,14 @@
+artifact_uri: file:C:/Users/shipr/OneDrive/Documents/project/FinShield-/mlruns/132801490020199474/647e2db112b945b9bb62d33cd02e77ac/artifacts
+end_time: 1775818836394
+entry_point_name: ''
+experiment_id: '132801490020199474'
+lifecycle_stage: active
+run_id: 647e2db112b945b9bb62d33cd02e77ac
+run_name: random_forest
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1775818826610
+status: 3
+tags: []
+user_id: shipr

@@ -95,6 +95,74 @@ def run_phase3() -> None:
     logger.info("Model saved in: models/")
     logger.info("Plots saved in: plots/")
 
+def run_phase4() -> None:
+    from model.features import load_cleaned_data, engineer_features, get_feature_matrix
+    from model.trainer import split_data, train_models, save_best_model
+    from monitoring.mlflow_tracker import (
+        setup_mlflow,
+        log_all_models,
+        get_best_run,
+        detect_drift
+    )
+    import pickle
+
+    logger.info("FinShield - Phase 4: MLflow Monitoring Started")
+    logger.info("=" * 50)
+
+    # Step 1 - Load and prepare data
+    df           = load_cleaned_data()
+    df           = engineer_features(df)
+    X, y         = get_feature_matrix(df)
+    feature_cols = list(X.columns)
+
+    # Step 2 - Split
+    X_train, X_test, y_train, y_test = split_data(X, y)
+
+    # Step 3 - Load saved models
+    # Re-train for MLflow logging
+    logger.info("Re-training models for MLflow logging...")
+    models = train_models(X_train, y_train)
+
+    # Step 4 - Setup MLflow
+    setup_mlflow()
+
+    # Step 5 - Log all models
+    run_ids = log_all_models(
+        models,
+        X_train, X_test,
+        y_train, y_test
+    )
+
+    logger.info(f"Logged {len(run_ids)} runs to MLflow")
+
+    # Step 6 - Get best run
+    best_run = get_best_run()
+
+    # Step 7 - Check for drift
+    from sklearn.metrics import roc_auc_score, f1_score
+    best_model = models[max(
+        models,
+        key=lambda m: roc_auc_score(
+            y_test,
+            models[m].predict_proba(X_test)[:, 1]
+        )
+    )]
+
+    current_metrics = {
+        'roc_auc': roc_auc_score(
+            y_test,
+            best_model.predict_proba(X_test)[:, 1]
+        ),
+        'f1_score': f1_score(y_test, best_model.predict(X_test))
+    }
+
+    detect_drift(current_metrics)
+
+    logger.info("=" * 50)
+    logger.info("FinShield - Phase 4: Complete")
+    logger.info("View MLflow UI: mlflow ui")
+    logger.info("Open browser : http://localhost:5000")
+
 if __name__ == "__main__":
     phase = sys.argv[1] if len(sys.argv) > 1 else "1"
 
@@ -104,5 +172,7 @@ if __name__ == "__main__":
         run_phase2()
     elif phase == "3":
         run_phase3()
+    elif phase == "4":
+        run_phase4()
     else:
         logger.error(f"Unknown phase: {phase}")
